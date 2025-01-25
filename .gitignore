@@ -1,0 +1,7 @@
+/app
+poc-go-eks
+vendor/
+k8s/secrets.yaml
+*.log
+*.tmp
+*.swp

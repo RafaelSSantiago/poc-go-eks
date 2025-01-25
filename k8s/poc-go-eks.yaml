@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: poc-go-eks
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: poc-go-eks
+  template:
+    metadata:
+      labels:
+        app: poc-go-eks
+    spec:
+      containers:
+        - name: poc-go-eks
+          image: 061039791229.dkr.ecr.us-east-1.amazonaws.com/poc-go-eks
+          imagePullPolicy: Always
+          env:
+            - name: WRITE_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: write-dsn
+            - name: READ_DSN
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: read-dsn
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: poc-go-eks-svc
+spec:
+  type: LoadBalancer
+  selector:
+    app: poc-go-eks
+  ports:
+    - port: 80
