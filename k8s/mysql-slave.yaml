@@ -7,34 +7,48 @@ spec:
   replicas: 2
   selector:
     matchLabels:
-      app: mysql-slave
+      app: mysql
+      role: slave
   template:
     metadata:
       labels:
-        app: mysql-slave
+        app: mysql
+        role: slave
     spec:
       containers:
-        - name: mysql-slave
-          image: mysql:8.0
-          env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: rootpass
-            - name: MYSQL_DATABASE
-              value: pocdb
-          ports:
-            - containerPort: 3306
-          volumeMounts:
-            - name: mysql-slave-pv
-              mountPath: /var/lib/mysql
+      - name: mysql
+        image: bitnami/mysql:8.0
+        env:
+        # Senha de root (igual à do master)
+        - name: MYSQL_ROOT_PASSWORD
+          value: "rootpass"
+        # Modo SLAVE
+        - name: MYSQL_REPLICATION_MODE
+          value: "slave"
+        # Mesmo usuário e senha de replicação do master
+        - name: MYSQL_REPLICATION_USER
+          value: "repl_user"
+        - name: MYSQL_REPLICATION_PASSWORD
+          value: "repl_pass"
+        # Aponta para o host do Master e porta
+        - name: MYSQL_MASTER_HOST
+          value: "mysql-master"
+        - name: MYSQL_MASTER_PORT_NUMBER
+          value: "3306"
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: data
+          mountPath: /bitnami/mysql
   volumeClaimTemplates:
-    - metadata:
-        name: mysql-slave-pv
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        storageClassName: gp2
-        resources:
-          requests:
-            storage: 1Gi
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: gp2
+      resources:
+        requests:
+          storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
@@ -42,8 +56,9 @@ metadata:
   name: mysql-slave
 spec:
   selector:
-    app: mysql-slave
+    app: mysql
+    role: slave
   ports:
-    - port: 3306
-      name: mysql
+  - port: 3306
+    name: mysql
   clusterIP: None

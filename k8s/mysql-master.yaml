@@ -7,35 +7,47 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mysql-master
+      app: mysql
+      role: master
   template:
     metadata:
       labels:
-        app: mysql-master
+        app: mysql
+        role: master
     spec:
       containers:
-      - name: mysql-master
-        image: mysql:8.0
+      - name: mysql
+        image: bitnami/mysql:8.0
         env:
+        # Senha de root
         - name: MYSQL_ROOT_PASSWORD
-          value: rootpass
-        - name: MYSQL_DATABASE
-          value: pocdb
+          value: "rootpass"
+        # Modo MASTER
+        - name: MYSQL_REPLICATION_MODE
+          value: "master"
+        # Usuário e senha de replicação
+        - name: MYSQL_REPLICATION_USER
+          value: "repl_user"
+        - name: MYSQL_REPLICATION_PASSWORD
+          value: "repl_pass"
+        # Configurações do seu banco / usuário da aplicação
         - name: MYSQL_USER
-          value: pocuser
+          value: "pocuser"
         - name: MYSQL_PASSWORD
-          value: pocpass
+          value: "pocpass"
+        - name: MYSQL_DATABASE
+          value: "pocdb"
         ports:
         - containerPort: 3306
         volumeMounts:
-        - name: mysql-master-pv
-          mountPath: /var/lib/mysql
+        - name: data
+          mountPath: /bitnami/mysql
   volumeClaimTemplates:
   - metadata:
-      name: mysql-master-pv
+      name: data
     spec:
       accessModes: ["ReadWriteOnce"]
-      storageClassName: gp2
+      storageClassName: gp2  # ou gp3, etc. Ajuste ao seu cluster
       resources:
         requests:
           storage: 1Gi
@@ -46,8 +58,10 @@ metadata:
   name: mysql-master
 spec:
   selector:
-    app: mysql-master
+    app: mysql
+    role: master
   ports:
   - port: 3306
     name: mysql
-  clusterIP: None  # headless service para StatefulSet
+  # Headless Service para StatefulSet
+  clusterIP: None
