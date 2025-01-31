@@ -42,7 +42,6 @@ Dockerfile
 - [Docker](https://www.docker.com/get-started)
 - [Kubernetes CLI (kubectl)](https://kubernetes.io/docs/tasks/tools/)
 - [AWS CLI](https://aws.amazon.com/cli/)
-- [Helm](https://helm.sh/docs/intro/install/)
 - [eksctl](https://eksctl.io/)
 
 ### Instalação
