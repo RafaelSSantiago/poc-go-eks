@@ -61,10 +61,10 @@ README.md
   docker build -t poc-go-eks .
   ```
 
-3. Executar os containers:
+3. Realize o push da imagem no ECR:
 
   ```bash
-  docker-compose up
+  docker push <ID_DA_CONTA_AWS>.dkr.ecr.<região>.amazonaws.com/poc-go-eks:latest
   ```
 
 4. Configurar o cluster com eksctl:
@@ -76,9 +76,10 @@ README.md
 5. Implantar no Amazon EKS:
 
   ```bash
-  kubectl apply -f kubernetes/poc-go-eks.yaml
-  kubectl apply -f kubernetes/mysql-master.yaml
-  kubectl apply -f kubernetes/mysql-slave.yaml
+    kubectl apply -f k8s/mysql-master.yaml
+    kubectl apply -f k8s/mysql-slave.yaml
+    kubectl apply -f k8s/poc-go-eks.yaml
+    kubectl apply -f k8s/secrets.yaml
   ```
 
 ### Uso
