@@ -22,19 +22,18 @@ projeto de prova de conceito que demonstra uma aplicação em Go implantada no A
 
 ```
 /cmd
-  /server
     main.go
 /internal
   /handlers
-    handlers.go
-  /models
-    models.go
-/docker
-  Dockerfile
-/kubernetes
-  deployment.yaml
-  service.yaml
+    read.go
+    write.go
+/k8s
+  mysql-master.yaml
+  mysql-slave.yaml
+  poc-go-eks.yaml
+  secrets.yaml
 README.md
+Dockerfile
 ```
 
 ### Requisitos
