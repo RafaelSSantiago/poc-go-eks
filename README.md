@@ -76,8 +76,9 @@ README.md
 5. Implantar no Amazon EKS:
 
   ```bash
-  kubectl apply -f kubernetes/deployment.yaml
-  kubectl apply -f kubernetes/service.yaml
+  kubectl apply -f kubernetes/poc-go-eks.yaml
+  kubectl apply -f kubernetes/mysql-master.yaml
+  kubectl apply -f kubernetes/mysql-slave.yaml
   ```
 
 ### Uso
