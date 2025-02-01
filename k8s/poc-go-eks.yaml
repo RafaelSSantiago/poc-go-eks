@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: poc-go-eks
-          image: 061039791229.dkr.ecr.us-east-1.amazonaws.com/poc-go-eks
+          image: idconta.dkr.ecr.us-east-1.amazonaws.com/poc-go-eks
           imagePullPolicy: Always
           env:
             - name: WRITE_DSN
